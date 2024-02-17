@@ -1,9 +1,12 @@
 import React from 'react'
-
-export default function TaskList() {
+import TaskShow from './TaskShow'
+export default function TaskList({tasks,onDelete,onUpdate}) { 
+    debugger;
   return (
-    <div>
-      
+    <div className='task-list'> 
+        {tasks.map((task,index)=>{ 
+            return <TaskShow key={index} task={task} onDelete={onDelete} onUpdate ={onUpdate}/>
+        })}
     </div>
   )
 }

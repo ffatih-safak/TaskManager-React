@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-export default function TaskCreate({onCreate}) {
-    const [title,setTitle] = useState('');  
-    const [taskDesc,setTaskDesc] = useState(''); 
+export default function TaskCreate({onCreate,task,taskFormUpdate,onUpdate}) {
+    const [title,setTitle] = useState(task ? task.title : '');  
+    const [taskDesc,setTaskDesc] = useState(task ? task.taskDesc : ''); 
     const handleChange = (event)=>{ 
         setTitle(event.target.value);
     };  
@@ -10,13 +10,30 @@ export default function TaskCreate({onCreate}) {
         setTaskDesc(event.target.value);
     }; 
     const handleSubmit = (event)=>{ 
-        event.preventDefault();
-        onCreate(title,taskDesc);
+        event.preventDefault(); //No Refresh 
+        if(taskFormUpdate){ 
+            onUpdate(task.id,title,taskDesc);
+        } 
+        else{ 
+            onCreate(title,taskDesc);
+        }     
         setTitle(''); 
-        setTaskDesc('');
+        setTaskDesc('');  
     };
   return (
-    <div className='task-create'>
+    <div> 
+        {taskFormUpdate ?  <>
+            <div className='task-update'>
+      <h3>Lütfen Taskı Düzenleyiniz</h3>
+      <form className='task-form' >
+        <label className='task-label'>Başlık</label>
+        <input value={title} onChange={handleChange} className='task-input'/> 
+        <label className='task-label'>Task </label>
+        <textarea value={taskDesc} onChange={handleTaskChange}  className='task-input' rows={5}/>
+        <button className='task-button update-button' onClick={handleSubmit}>Güncelle</button>
+      </form>
+    </div>
+        </> :  <div className='task-create'>
       <h3>Lütfen Task Ekleyiniz</h3>
       <form className='task-form' >
         <label className='task-label'>Başlık</label>
@@ -25,6 +42,8 @@ export default function TaskCreate({onCreate}) {
         <textarea value={taskDesc} onChange={handleTaskChange}  className='task-input' rows={5}/>
         <button className='task-button' onClick={handleSubmit}>Oluştur</button>
       </form>
+    </div>}
     </div>
+   
   )
 }
